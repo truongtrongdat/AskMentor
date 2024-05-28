@@ -1,0 +1,263 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+    font-family: "Noto Sans", sans-serif;
+}
+
+#footer,
+header {
+    width: min(100%, 1600px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#footer {
+    margin-top: 4em;
+    margin-bottom: 2em;
+    padding: 48px 0;
+    background-color: #000;
+    border-radius: 8px;
+    color: #fff;
+}
+
+    #footer p {
+        margin: 0;
+        font-size: 12px;
+    }
+
+.nav-container {
+    padding-top: 12px;
+}
+
+.nav-logo {
+    display: inline-flex;
+    width: 90px;
+}
+
+.page-login {
+    margin-top: 2em;
+    min-height: 700px;
+    display: flex;
+    justify-content: center;
+}
+
+.form-login {
+    max-width: 570px;
+    padding: 16px 4em;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.form {
+    padding: 0 32px;
+}
+
+.content-login h1 {
+    margin-bottom: 1.5em;
+}
+
+.air3-input-group {
+    display: flex;
+    align-items: center;
+}
+
+.air3-icon {
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+    color: currentColor;
+}
+
+    .air3-icon svg {
+        width: 100%;
+        height: 100%;
+    }
+
+.input-group input:focus {
+    outline: unset;
+}
+
+.input-group-text {
+    background-color: transparent;
+    border-width: 1px;
+    border-right: unset !important;
+    border-color: #d9d9d9;
+}
+
+.input-group input {
+    border-left: unset !important;
+    border-width: 1px;
+    border-color: #d9d9d9;
+}
+
+.input-group {
+    min-width: 350px;
+}
+
+.air3-btn-block {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    border: unset;
+    background-color: #108A00;
+    color: #fff;
+    padding: 8px 0;
+    border-radius: 160px;
+    margin-top: 1.5em;
+    font-weight: 500;
+}
+
+.btn-separator {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #d9d9d9;
+    line-height: .1em;
+    font-weight: 300;
+    margin: 32px 0;
+}
+
+    .btn-separator > span {
+        padding: 0 10px;
+        background: #fff;
+        ;
+    }
+
+.width-auto {
+    min-width: 0 !important;
+    width: auto !important;
+}
+
+.text-center .air3-btn-row {
+    justify-content: center;
+}
+
+.air3-btn-row {
+    --btn-row-gap: 16px;
+    display: flex;
+    grid-gap: 16px;
+    gap: 16px;
+}
+
+.gsso-button.air3-btn-primary {
+    background-color: #4285f4;
+    color: #fff;
+    text-align: center;
+    height: 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+    .gsso-button.air3-btn-primary:after,
+    .gsso-button.air3-btn-primary:before {
+        width: 38px;
+        height: 38px;
+        content: "";
+    }
+
+    .gsso-button.air3-btn-primary:before {
+        max-width: 38px;
+        border-radius: 10rem;
+        background-image: url(/assets/img/download.svg);
+        background-repeat: no-repeat;
+        align-self: center;
+        justify-self: start;
+        flex-grow: 1;
+        display: flex;
+        margin-left: 2px;
+    }
+
+.gsso-label {
+    flex-grow: 2;
+}
+
+.mt-5,
+.mt-6x {
+    margin-top: 24px;
+}
+
+.apple-sso-button.air3-btn-primary {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    color: #222;
+    text-align: center;
+    height: 40px;
+    padding: 0 38px;
+    font-size: 15px;
+    font-synthesis: none;
+    border-radius: 10rem;
+    border: 1px solid #222;
+}
+
+    .apple-sso-button.air3-btn-primary > svg {
+        margin-right: 5px;
+        width: 10px;
+        height: 11.4px;
+    }
+
+.line-heading {
+    overflow: hidden;
+    text-align: center;
+    color: #676767;
+}
+
+.pb-3,
+.pb-3x {
+    padding-bottom: 12px;
+}
+
+.my-3,
+.my-3x {
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.width-sm {
+    width: 218px !important;
+    min-width: 218px !important;
+    max-width: none;
+}
+
+.px-6, .px-8x {
+    padding-right: 32px;
+    padding-left: 32px;
+}
+
+#sign-up-link {
+    padding: 8px 32px;
+    background-color: #fff;
+    border: 2px solid rgb(16, 138, 0);
+    border-radius: 160px;
+    color: rgb(16, 138, 0);
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.line-heading:before {
+    right: 10px;
+    margin-left: -50%;
+}
+
+.line-heading:after {
+    left: 10px;
+    margin-right: -50%;
+}
+
+.line-heading:after, .line-heading:before {
+    background-color: #d9d9d9;
+    content: "";
+    display: inline-block;
+    height: 1px;
+    position: relative;
+    vertical-align: middle;
+    width: 50%;
+}
+
+#main2 {
+    margin: auto;
+    max-width: 520px;
+    border: 1px solid #808080;
+}

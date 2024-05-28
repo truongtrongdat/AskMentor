@@ -1,0 +1,180 @@
+﻿@model List<Libs.Entity.Room>
+@inject AskMentor.Helper.Helper _helper;
+
+@section Styles {
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/chat.css">
+}
+
+<main id="chatRoom" class="container">
+    <div class="header-room">
+        <h2 class="header-row__header">
+            Messages
+        </h2>
+    </div>
+    <div class="desktop-container desktop-layout-body">
+        <div class="desktop-layout-index">
+            <section class="room-list rooms-panel-body rooms-panel-body">
+                <div class="rooms-panel-section sidebar-container">
+                    @if (Model.Count > 0)
+                    {
+                        @foreach (Libs.Entity.Room room in Model)
+                        {
+                            <div class="discussion" onclick="ChoseUser('@room.UserId1','@room.UserId2')" style="width:20em">
+                                <div class="photo"
+                                     style="background-image: url(https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80);">
+                                </div>
+                                <div class="desc-contact">
+                                    <p class="name">
+                                        @if (ViewBag.userId != room.UserId1)
+                                        {
+                                            @await _helper.GetNameUserById(room.UserId1)
+                                        }
+                                        else
+                                        {
+                                            @await _helper.GetNameUserById(room.UserId2)
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                        }
+
+                    }
+                </div>
+            </section>
+        </div>
+        <div class="desktop-layout-room d-none" id="chat-container">
+            <section class="chat">
+                <div class="header-chat">
+                    <i class="fa-regular fa-user ml-2em"></i>
+                    <p class="name" id="nameChat"></p>
+                </div>
+                <div class="messages-chat" id="content_chat" style="overflow-y:scroll; max-height:30em">
+                </div>
+                <div class="footer-chat">
+                    <i class="fa-regular fa-face-smile clickable " style="font-size:25pt;margin-left: 32px;" aria-hidden="true"></i>
+                    <input type="text" class="write-message" placeholder="Type your message here" id="input_chat" />
+                    <i class="fa-solid fa-paper-plane clickable"></i>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+@section Scripts {
+
+
+
+    <script>
+        $(document).ready(function () {
+            $(".discussion").on("click", function () {
+                $(".discussion").removeClass("message-active")
+                $(this).addClass("message-active")
+            })
+        })
+
+
+        function scrollToBottom(element) {
+            var chatContainer = document.getElementById("content_chat");
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+    </script>
+
+    <script src="~/js/site.js"></script>
+    <script>
+        "use strict";
+
+        var RoomId = 0;
+        var toId = "";
+        var FromId = '@Html.Raw(ViewBag.userId)';
+        function AddMesage(fromId, mess) {
+
+            if (fromId === FromId) {
+                $("#content_chat").append(`<div class="message text-only"><div class="response"><p class="text"> ${mess}</p></div></div>`)
+            } else {
+                $("#content_chat").append(`<div class="message"><div class="photo" style="background-image: url(https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80);"><div class="online"></div></div><p class="text"> ${mess} </p></div></div>`)
+            }
+        }
+
+        connection.on("HistoryChatRecord", function (message) {
+            console.log("HistoryChatRecord", message)
+
+            message.forEach(item => {
+                AddMesage(item.fromUserId, item.content)
+            })
+
+
+        });
+
+        connection.on("History", function (fromId, toId, roomId, message) {
+            RoomId = roomId;
+            this.toId = toId
+            message.reverse();
+            $("#content_chat").empty();
+            message.forEach(item => {
+                console.log(item)
+                AddMesage(item.fromUserId, item.content)
+            })
+            scrollToBottom($("#content_chat"))
+        });
+
+        connection.on("ReceiveMessage", function (fromId, toId, message) {
+
+            console.log("ReceiveMessage::", message)
+            AddMesage(fromId, message)
+            scrollToBottom($("#content_chat"))
+
+        });
+
+        connection.on("NameUser", function (fromId, name) {
+            if (fromId == FromId) {
+                $("#nameChat").text(name)
+            }
+        });
+
+
+
+        function ChoseUser(userId1, userId2) {
+
+            if (FromId != userId1) {
+                connection.invoke("GetName", userId1, FromId)
+            } else {
+                connection.invoke("GetName", userId2, FromId)
+            }
+
+            connection.invoke("JoinRom", userId1, userId2).
+                then(data => {
+                    $("#chat-container").removeClass("d-none");
+                })
+                .catch(function (err) {
+
+                    setTimeout(() => {
+                        connection.invoke("JoinRom", userId1, userId2)
+                    }, 2000)
+
+                    return console.error(err.toString());
+                });
+        }
+
+
+        $("#input_chat").keyup(function (event) {
+            if (event.keyCode === 13) {
+                let value = $(this).val();
+                console.log(value);
+                if (value.trim() === '') {
+                    return;
+                }
+                $(this).val("")
+                connection.invoke("SendMessage", FromId, toId, RoomId, value)
+                    .then(res => {
+
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }
+        });
+
+
+    </script>
+}

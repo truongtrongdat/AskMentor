@@ -1,0 +1,72 @@
+﻿@model List<Libs.Entity.Topic>;
+@inject AskMentor.Helper.Helper _helper;
+@section Styles {
+    <link rel="stylesheet" href="/assets/css/style.css">
+}
+
+<main id="field">
+
+    <section class="d-flex justify-content-center">
+        <div class="">
+            <div class="">
+                <h1 class="fs-2 font-weight-bold">Hire freelance design and creative experts to help you scale</h1>
+                <p class="gtm-base-l gtm-margin-s max-440">Thousands of pros ready to kick-start your creative overhaul from day one.</p>
+            </div>
+            <div>
+                <a class="btn btn-success m-auto" href="/Auth/Register">Get started</a>
+            </div>
+        </div>
+
+        <div class="">
+            <img class="w-75" src="/assets/img/66312d9c5ffe55b035b22f4b_Image (4).webp" />
+        </div>
+
+    </section>
+
+    <section class="mt-5 mb-3 mx-2">
+
+        <div class="d-flex justify-content-center gap-6">
+            <img src="https://assets-global.website-files.com/603fea6471d9d8559d077603/662e48b170078c42069a52c6_Microsoft.svg" loading="lazy" alt="" class="m-2">
+            <img src="https://assets-global.website-files.com/603fea6471d9d8559d077603/662e48b170078c42069a5313_pngwing%201.svg" loading="lazy" alt="" class="m-2">
+            <img src="https://assets-global.website-files.com/603fea6471d9d8559d077603/662e48b170078c42069a530e_Group%207384.svg" loading="lazy" alt="" class="m-2">
+            <img src="https://assets-global.website-files.com/603fea6471d9d8559d077603/662e48b270078c42069a532a_Bissell_logo%202.svg" loading="lazy" alt="" class="m-2">
+            <img src="https://assets-global.website-files.com/603fea6471d9d8559d077603/662e48b170078c42069a5301_nasdaq-256%201.svg" loading="lazy" alt="" class="m-2">
+        </div>
+
+    </section>
+
+    <section id="topic" class="container-fluid py-5" style="background-color:#f9f9f9">
+
+        <div class="container">
+            <div class="row">
+                @if (Model.Count > 0)
+                {
+                    @foreach (var item in Model)
+                    {
+                        <div class="col">
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.Name</h5>
+                                    <a href="/topic/@item.Id" class="btn btn-primary">
+                                        <div class="d-flex justify-content-start gap-2">
+                                            @foreach (var user in _helper.GetUserByTopic(item.Id, 0, 3))
+                                            {
+                                                <img width="30" height="30" class="rounded-circle" src="@(user.Avt != "" ? user.Avt : "/assets/img/avatar.jpeg")" />
+                                            }
+                                            <span class="px-2 float-end">
+                                                <i class="fa-solid fa-arrow-right"></i>
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                }
+
+            </div>
+        </div>
+    </section>
+
+</main>

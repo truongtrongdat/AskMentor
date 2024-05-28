@@ -1,0 +1,149 @@
+﻿@section Styles {
+    <link rel="stylesheet" href="/assets/css/login.css">
+}
+
+<div id="app_vue" class="container text-center" style="margin-top:6em; margin-bottom:20em">
+    <div class="container d-flex justify-content-around">
+        <p class="btn btn-outline-primary" v-on:click="backSate">Back</p>
+        <p class="btn btn-outline-primary" v-on:click="nextSate">Next</p>
+    </div>
+
+    <div v-if="state == 1">
+        <div class="p-2">
+            <label class="form-label">Choose a career field</label>
+            <select class="form-control" v-model="dataUser.fileId">
+                <option selected disabled value="0">--choose--</option>
+                <option v-for="(item, index) in field" :value="item.id">{{item.name}}</option>
+            </select>
+        </div>
+    </div>
+
+    <div v-if="state == 2">
+        <div class="p-2">
+            <label class="form-label">Choose a Topic</label>
+            <select class="form-control" v-model="dataUser.topicId">
+                <option selected disabled value="0">--choose--</option>
+                <option v-for="(item, index) in topic" v-show="item.fieldId == dataUser.fileId" :value="item.id">{{item.name}}</option>
+            </select>
+        </div>
+    </div>
+
+    <div v-if="state == 3">
+        <div class="p-2">
+            <label for="certificate" class="form-label btn btn-secondary">Certificate / CV</label>
+            <input class="d-none" type="file" id="certificate" v-on:change="Upload" accept="application/pdf" />
+            <br />
+            <img style="width:15em; height:auto" :src="dataUser.certificate" v-show="dataUser.certificate !=''" />
+        </div>
+
+        <p class="btn btn-success" v-on:click="Save">Save</p>
+    </div>
+
+
+</div>
+
+@section Scripts {
+    <script src="~/lib/vue.min.js"></script>
+    <script>
+        var app_vue = new Vue({
+            el: "#app_vue",
+            data: {
+                field: [],
+                topic: [],
+                state: 1,
+                dataUser: {
+                    fileId: 0,
+                    topicId: 0,
+                    certificate: "",
+                    email: localStorage.getItem("email")
+                },
+                listSate: [
+                    { stt: 1, state: "field" },
+                    { stt: 2, state: "Topic" },
+                    { stt: 3, state: "certificate" },
+                ]
+            },
+            computed: {
+
+            },
+            mounted() {
+                this.initData();
+            },
+            methods: {
+                initData() {
+                    fetch("/api/Field")
+                        .then(res => res.json())
+                        .then(res => {
+                            this.field = res.data
+                        })
+
+                    fetch("/api/Topic")
+                        .then(res => res.json())
+                        .then(res => {
+                            this.topic = res.data
+                        })
+
+                },
+                backSate() {
+                    if (this.state > 1) {
+                        this.state -= 1;
+                    }
+                },
+                nextSate() {
+
+                    if (this.dataUser.fileId === 0) {
+                        return;
+                    }
+
+                    if (this.state === 2 && this.dataUser.topicId === 0) {
+                        return;
+                    }
+
+
+                    if (this.state < 3) {
+                        this.state += 1;
+                    }
+                },
+                Upload(event) {
+                    const file = event.target.files[0];
+
+                    let formData = new FormData();
+                    formData.append("file", file);
+                    console.log(file)
+
+                    fetch("/api/Authencation/upload_certificate", {
+                        method: 'POST',
+                        headers: {
+
+                        },
+                        body: formData
+                    })
+                        .then(res => res.json())
+                        .then(res => {
+                            this.dataUser.certificate = res.data
+                        })
+                },
+                Save() {
+                    let curentThis = this;
+                    fetch('/api/Authencation/update_user', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            Email: curentThis.dataUser.email,
+                            FileId: curentThis.dataUser.fileId,
+                            TopicId: curentThis.dataUser.topicId,
+                            certificate: curentThis.dataUser.certificate
+                        })
+                    })
+                        .then(response => response.json())
+                        .then(res => {
+                            window.location.href = "/"
+                        })
+
+                }
+            }
+        })
+    </script>
+}

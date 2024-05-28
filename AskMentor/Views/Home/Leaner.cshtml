@@ -1,0 +1,129 @@
+﻿@model List<Libs.Entity.ApplicationUser>
+@inject AskMentor.Helper.Helper _helper;
+
+@section Styles {
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/rent.css">
+}
+
+<main class="container" id="mentorRent">
+    <h1 class="hero-title__header display-rebrand hero-title mb-6x text-up-green">
+        Hire the best Java developers
+    </h1>
+    <span class="hero-subtitle">
+        Check out Java developers with the skills you need for your next job.
+    </span>
+    <div class="list-mentor-container mt-5">
+        <div class="row">
+            @if (Model != null && Model.Count > 0)
+            {
+                @foreach (var mentor in Model)
+                {
+                    <div class="col-12 col-md-3 ">
+                        <a class="items-mentor">
+                            <div class="hourly-rate">
+                                <span>
+                                    $120/hr
+                                </span>
+                            </div>
+                            <div class="air3-presence-container">
+                                <img width="128" height="128" src="@(mentor.Avt != "" ? mentor.Avt : "/assets/img/avatar.jpeg")"
+                                     class="air3-avatar air3-avatar-128" alt="">
+                            </div>
+                            <div class="name-mentor text-center">
+                                <p class="name-main">@mentor.Name</p>
+                                <span class="sub">
+                                    @(mentor.TopicId != null ? _helper.GetFieldNameById(mentor.FileId ?? 0) : "Java Developer")
+                                </span>
+                            </div>
+                            <div class="star-and-job">
+                                <div class="star-ratting">
+                                    <div class="star-ratting-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true"
+                                             viewBox="0 0 24 24" role="img">
+                                            <path fill=" #14a800" fill-rule="evenodd"
+                                                  vector-effect="non-scaling-stroke" stroke=" #14a800"
+                                                  stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                  d="M13.142 3.813l1.782 4.802 4.927.275c.243.013.477.104.672.26.194.156.338.37.415.615.077.245.082.508.015.756a1.288 1.288 0 01-.391.633L16.726 14.4l1.282 4.993c.06.252.047.517-.038.76a1.285 1.285 0 01-.437.606c-.2.15-.439.234-.684.24a1.174 1.174 0 01-.693-.21L12 17.976 7.854 20.77a1.175 1.175 0 01-.69.214 1.178 1.178 0 01-.684-.233 1.283 1.283 0 01-.441-.599 1.36 1.36 0 01-.047-.757l1.272-4.972-3.826-3.268a1.288 1.288 0 01-.391-.633 1.349 1.349 0 01.015-.756 1.28 1.28 0 01.415-.615c.195-.156.429-.247.672-.26l4.927-.275 1.782-4.802c.092-.24.25-.446.454-.59a1.177 1.177 0 011.376-.001c.204.145.361.35.454.59z"
+                                                  clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+
+                                    <span data-qa="star-value" data-v-63f8bf91="">
+                                        4.9/5
+                                    </span>
+
+                                </div>
+                                <div class="count-jobs">
+                                    (10 jobs)
+                                </div>
+                            </div>
+                            <div class="skills-container mt-2 air3-token-wrap justify-content-center my-3x">
+                                <div class="air3-token ellipsis">
+                                    <span> RESTful Architecture</span>
+                                </div>
+                                <div class="air3-token ellipsis">
+                                    <span> RESTful </span>
+                                </div>
+                                <div class="air3-token ellipsis">
+                                    <span> RESTful </span>
+                                </div>
+                                <div class="air3-token ellipsis">
+                                    <span> RESTful Architecture</span>
+                                </div>
+                            </div>
+                            <div class="chat-now-btn mt-3">
+                                <button class="chat-now" onclick="ChoseUser('@mentor.Id')">
+                                    Chat Now
+                                </button>
+                            </div>
+
+                        </a>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+
+
+    <script src="/js/site.js"></script>
+
+    <script>
+        "use strict";
+
+        var RoomId = 0;
+        var toId = "";
+        var FromId = '@ViewBag.userId';
+
+
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+        connection.start().then(function () {
+            console.log("connection success")
+        }).catch(function (err) {
+            console.log("connection err:::", err)
+            return;
+        });
+
+        function ChoseUser(toId) {
+
+            connection.invoke("JoinRom", '@ViewBag.userId', toId).
+                then(data => {
+                    window.location.href = "/Home/Chat"
+                })
+                .catch(function (err) {
+
+                    setTimeout(() => {
+                        ChoseUser(toId, name)
+                    }, 2000)
+
+                    return console.error(err.toString());
+                });
+        }
+
+
+    </script>
+}

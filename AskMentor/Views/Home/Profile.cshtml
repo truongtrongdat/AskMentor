@@ -1,0 +1,261 @@
+﻿@model Libs.Entity.ApplicationUser
+@inject AskMentor.Helper.Helper _helper;
+@{
+    var userId = await _helper.GetUserId(User.Identity.Name);
+}
+@section Styles {
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/rent.css">
+}
+<style>
+    .profile-mentor {
+        cursor: pointer;
+        font-weight: 500;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 100%;
+        padding: 24px 24px;
+        background: #fff;
+        border: 1px solid #d5e0d5;
+        border-radius: 16px;
+        width: 100%;
+        text-decoration: none;
+    }
+
+    .star-rating {
+        direction: rtl;
+        display: inline-flex;
+        font-size: 2rem;
+        margin-top: -8px;
+    }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            cursor: pointer;
+        }
+
+    .star {
+        fill: #ddd;
+        transition: fill 0.2s;
+    }
+
+    .star-rating input:checked ~ label .star,
+    .star-rating input:hover ~ label .star,
+    .star-rating label:hover ~ label .star {
+        fill: #ffc107;
+    }
+
+    .evaluate-mentor {
+        display: flex;
+        align-items: center;
+    }
+
+        .evaluate-mentor p {
+            margin: 0;
+            margin-right: 10px;
+        }
+</style>
+<main class="container" id="mentorRent">
+    <h1 class="hero-title__header display-rebrand hero-title mb-6x text-up-green">
+        Profile Mentor
+    </h1>
+
+    <div class="row">
+        <div class="col-12 col-md-9 ">
+            <div class="profile-mentor">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="air3-presence-container">
+                            <img width="128" height="128" src="@(Model.Avt != "" ? Model.Avt : "/assets/img/avatar.jpeg")"
+                                 class="air3-avatar air3-avatar-128" alt="">
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="fullname-mentor">
+                            <p class="name-main">FullName: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@Model.Name</span></p>
+                        </div>
+                        <div class="work-email-address">
+                            <p class="name-main">Work email address: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@Model.Email</span></p>
+                        </div>
+                        <div class="address-mentor">
+                            <p class="name-main">Address: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@Model.Address</span></p>
+                        </div>
+                        <div class="university-mentor">
+                            <p class="name-main">University: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@Model.University</span></p>
+                        </div>
+                        <div class="major-mentor">
+                            <p class="name-main">Major: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@Model.Major</span></p>
+                        </div>
+                        <div class="field-mentor">
+                            <p class="name-main">Field: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@(Model.FileId != null ? _helper.GetFieldNameById(Model.FileId ?? 0) : "Java Developer") </span></p>
+                        </div>
+                        <div class="topic-mentor">
+                            <p class="name-main">Topic: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@(Model.TopicId != null ? _helper.GetTopicNameById(Model.TopicId ?? 0) : "")</span></p>
+                        </div>
+                        <div class="cv-mentor">
+                            <p class="name-main">CV: <span style="font-style: italic; font-weight: 500; text-decoration:underline"><a target="_blank" href="@Url.Action("DownloadFile", "Home", new { id = Model.Id })"> @_helper.GetCertificationName(Model.Certification)</a></span></p>
+                        </div>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            
+
+                            <div class="chat-now-btn mt-3">
+                                <button class="chat-now" onclick="ChoseUser('@Model.Id')">
+                                    Chat Now
+                                </button>
+                                <button class="chat-now" data-toggle="modal" data-target="#evaluate-modal">
+                                    Đánh Giá 
+                                </button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="chat-now-btn mt-3">
+                                <button onclick="resgister()" class="chat-now">
+                                    Chat Now
+                                </button>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="evaluate-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Đánh Giá Mentor @Model.Name</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="evaluate-mentor">
+                        <p class="name-main">Đánh giá mentor:</p>
+                        <div class="star-rating">
+                            <input type="radio" id="5-stars" name="rating" value="5" />
+                            <label for="5-stars">
+                                <svg class="star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                    <path d="M12 .587l3.668 7.568L24 9.748l-6 5.905 1.413 8.528L12 18.963l-7.413 5.218L6 15.653.001 9.748l8.332-1.593z" />
+                                </svg>
+                            </label>
+                            <input type="radio" id="4-stars" name="rating" value="4" />
+                            <label for="4-stars">
+                                <svg class="star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                    <path d="M12 .587l3.668 7.568L24 9.748l-6 5.905 1.413 8.528L12 18.963l-7.413 5.218L6 15.653.001 9.748l8.332-1.593z" />
+                                </svg>
+                            </label>
+                            <input type="radio" id="3-stars" name="rating" value="3" />
+                            <label for="3-stars">
+                                <svg class="star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                    <path d="M12 .587l3.668 7.568L24 9.748l-6 5.905 1.413 8.528L12 18.963l-7.413 5.218L6 15.653.001 9.748l8.332-1.593z" />
+                                </svg>
+                            </label>
+                            <input type="radio" id="2-stars" name="rating" value="2" />
+                            <label for="2-stars">
+                                <svg class="star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                    <path d="M12 .587l3.668 7.568L24 9.748l-6 5.905 1.413 8.528L12 18.963l-7.413 5.218L6 15.653.001 9.748l8.332-1.593z" />
+                                </svg>
+                            </label>
+                            <input type="radio" id="1-star" name="rating" value="1" />
+                            <label for="1-star">
+                                <svg class="star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                    <path d="M12 .587l3.668 7.568L24 9.748l-6 5.905 1.413 8.528L12 18.963l-7.413 5.218L6 15.653.001 9.748l8.332-1.593z" />
+                                </svg>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="evaluate-mentor-content">
+                        <p class="name-main">Content: 
+                            <textarea class="form-control" rows="4" id="content-evaluate"></textarea>
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="fnSaveEvalute()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+
+
+    <script src="~/js/site.js"></script>
+    <script>
+        "use strict";
+        var RoomId = 0;
+        var toId = "";
+        var FromId = '@await _helper.GetUserId(User.Identity.Name)';
+
+        console.log("FromId::", FromId)
+
+        function resgister() {
+            window.location.href = "/Auth/Register"
+        }
+
+        function ChoseUser(toId) {
+
+            connection.invoke("JoinRom", FromId, toId).
+                then(data => {
+                    window.location.href = "/Home/Chat"
+                })
+                .catch(function (err) {
+
+                    setTimeout(() => {
+                        ChoseUser(toId, name)
+                    }, 2000)
+
+                    return console.error(err.toString());
+                });
+        }
+
+
+    </script>
+
+    <script>
+
+        const radios = document.getElementsByName('rating');
+        if (radios) {
+            var condition = "@await _helper.GetRatingOfMentor(userId, Model.Id)"
+            radios.forEach(radio => {
+                if (radio.value === condition) {
+                    radio.checked = true;
+                }
+            });
+        }
+
+        function fnSaveEvalute() {
+            const stars = document.querySelectorAll('.star-rating input');
+            var userId = '@await _helper.GetUserId(User.Identity.Name)';
+            var mentorId = '@Model.Id';
+            var content = $('#content-evaluate').val();
+            stars.forEach(star => {
+                if (star.checked) {
+                    fetch("https://localhost:7062/api/Evaluate/Rating/" + userId + "/" + star.value + "/" + mentorId, {
+                        method: 'POST',
+                        body: JSON.stringify({ Content: content }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                    })
+                        .then(response => {
+                            if (response && response.status == 200) {
+                                $("#evaluate-modal .close").click()
+                            }
+                        })
+                        .then(data => { })
+                        .catch(error => { });
+                }
+            });
+        }
+    </script>
+}

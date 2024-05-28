@@ -1,0 +1,159 @@
+﻿@model Libs.Entity.ApplicationUser
+@inject AskMentor.Helper.Helper _helper;
+@{
+    var userId = await _helper.GetUserId(User.Identity.Name);
+    var role = await _helper.GetUserRoleByEmailAsync(User.Identity.Name);
+}
+@section Styles {
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/rent.css">
+}
+<style>
+    .profile-mentor {
+        cursor: pointer;
+        font-weight: 500;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 100%;
+        padding: 24px 24px;
+        background: #fff;
+        border: 1px solid #d5e0d5;
+        border-radius: 16px;
+        width: 100%;
+        text-decoration: none;
+    }
+
+    .star-rating {
+        direction: rtl;
+        display: inline-flex;
+        font-size: 2rem;
+        margin-top: -8px;
+    }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            cursor: pointer;
+        }
+
+    .star {
+        fill: #ddd;
+        transition: fill 0.2s;
+    }
+
+    .star-rating input:checked ~ label .star,
+    .star-rating input:hover ~ label .star,
+    .star-rating label:hover ~ label .star {
+        fill: #ffc107;
+    }
+
+    .evaluate-mentor {
+        display: flex;
+        align-items: center;
+    }
+
+        .evaluate-mentor p {
+            margin: 0;
+            margin-right: 10px;
+        }
+</style>
+<main class="container" id="mentorRent">
+    <h1 class="hero-title__header display-rebrand hero-title mb-6x text-up-green">
+        Update Profile
+    </h1>
+    @using (Html.BeginForm("EditProfile", "Home", FormMethod.Post, new { @class = "main__apply--post", enctype = "multipart/form-data" }))
+    {
+        <div class="row">
+            <div class="col-12 col-md-9 ">
+                <div class="profile-mentor">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="air3-presence-container" onclick="uploadAvarta()">
+                                <img  width="128" height="128" src="@(Model.Avt != "" ? Model.Avt : "/assets/img/avatar.jpeg")"
+                                     class="air3-avatar air3-avatar-128" alt="">
+                               
+                            </div>
+                            @Html.TextBoxFor(m => m.AvatarFile, new { id = "upload-avarta", @class = "form-control d-none ", type = "file", @accept = "image/*", })
+                        </div>
+                        <div class="col-md-9">
+                            @if (TempData["Successful"] != null)
+                            {
+                                <div class="alert alert-success" role="alert">
+                                   Update Profile Successful
+                                </div>
+                            }
+
+                            <div class="fullname-mentor">
+                                <p class="name-main">
+                                    FullName:
+                                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                                    @Html.HiddenFor(m => m.Id)
+                                </p>
+                            </div>
+                            <div class="address-mentor">
+                                <p class="name-main">
+                                    Address:
+                                    @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                                </p>
+                            </div>
+                            <div class="university-mentor">
+                                <p class="name-main">
+                                    University:
+                                    @Html.TextBoxFor(m => m.University, new { @class = "form-control" })
+                                </p>
+                            </div>
+                            <div class="major-mentor">
+                                <p class="name-main">
+                                    Major:
+                                    @Html.TextBoxFor(m => m.Major, Model.Major, new { @class = "form-control" })
+                                </p>
+                            </div>
+                            @if (role == "Mentor")
+                            {
+@*                                 <div class="field-mentor">
+                                    <p class="name-main">
+                                        Field:
+                                        @Html.DropDownListFor(model => model.FileId, ViewBag.Fields as List<SelectListItem>,
+                                                 new { @class = "form-control text-box single-line" })
+                                    </p>
+                                </div>
+                                <div class="topic-mentor">
+                                    <p class="name-main">
+                                        Topic:
+                                        @Html.DropDownListFor(model => model.TopicId, ViewBag.Topics as List<SelectListItem>,
+                                                 new { @class = "form-control text-box single-line" })
+                                    </p>
+                                </div> *@
+                                <div class="cv-mentor">
+                                    <p class="name-main">
+                                        CV:
+                                        @Html.TextBoxFor(m => m.CertificationFile, new { @class = "form-control", type = "file", @accept="application/pdf" })
+                                    </p>
+                                </div>
+                            }
+
+
+                            <div>
+                                <button type="submit" class="btn btn-primary">Update Profile</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    
+</main>
+
+@section Scripts {
+    <script src="~/js/site.js"></script> 
+
+    <script>
+        function uploadAvarta() {
+            $("#upload-avarta").click();
+        }
+    </script>
+}
