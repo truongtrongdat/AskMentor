@@ -35,19 +35,15 @@
             Save();
         }
 
-        public Room getRoomByUserId(string userid1, string userid2)
+        public int CreateOrUpdateRoomTopic(string userId, int topicId)
         {
-            return RoomRepository.getRoomByUserId(userid1, userid2);
+            return this.RoomTopicRepository.CreateOrUpdateRoomTopic(userId, topicId);
         }
 
-        public void deleteRoom(int id)
+        public int GetRoomTopicIdByTopicId(int topicId)
         {
-            Room Room = RoomRepository.getRoomById(id);
-            if (Room != null)
-            {
-                RoomRepository.deleteRoomById(id);
-                Save();
-            }
+            return this.RoomTopicRepository.GetRoomTopicIdByTopicId(topicId);
         }
+        
     }
 }

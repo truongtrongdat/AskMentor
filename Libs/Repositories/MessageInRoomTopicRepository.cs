@@ -27,6 +27,7 @@
         public MessageInRoomTopic insertMessageInRoomTopicByRomId(MessageInRoomTopic message)
         {
             _dbContext.Add(message);
+            _dbContext.SaveChanges();
             return message;
         }
         public bool deleteMessageInRoomTopicByRomId(int romId)

@@ -1,0 +1,29 @@
+﻿@model List<AskMentor.Models.RoomTopicViewModel>;
+
+<div class="container">
+    <table class="table">
+        <thead class="table-borderless table-dark">
+            <tr>
+                <td>Room Topic</td>
+                <td>User</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="col-2">@item.TopicName</td>
+                    <td>
+                        @foreach (var user in item.Users)
+                        {
+                            <div class="form-group shadow-lg p-3 w-25 rounded">
+                                <img src="@user.Avt" alt="Ảnh lỗi" style="width:3em; height:auto"/>
+                                <p>@user.Name</p>
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

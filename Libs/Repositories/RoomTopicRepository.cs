@@ -10,6 +10,8 @@ namespace Libs.Repositories
         public void deleteRoomTopicById(int roomId);
         public bool AddUserToRoomTopic(int roomId, string userId);
         public bool DeleteUserToRoomTopic(int roomId, string userId);
+        public int CreateOrUpdateRoomTopic(string userId, int topicId);
+        public int GetRoomTopicIdByTopicId(int topicId);
     }
     public class RoomTopicRepository : RepositoryBase<RoomTopic>, IRoomTopicRepository
     {
@@ -84,9 +86,68 @@ namespace Libs.Repositories
                 _dbContext.Update(rom);
                 return true;
             }
-            
 
         }
+        public int CreateOrUpdateRoomTopic(string userId, int topicId)
+        {
+            RoomTopic rom = _dbContext.RoomTopic.FirstOrDefault(i => i.TopicId == topicId);
+
+            if(rom == null)
+            {
+                rom = new RoomTopic();
+                rom.TopicId = topicId;
+                rom.ListUserId = JsonConvert.SerializeObject(new List<string>() { userId});
+                rom.CreateDate = DateTime.Now;
+                _dbContext.Add(rom);
+                _dbContext.SaveChanges();
+                return rom.Id;
+            }
+            else
+            {
+                List<String> users = JsonConvert.DeserializeObject<List<String>>(rom.ListUserId);
+                if(users == null)
+                {
+                    users = new List<string>();
+                    users.Add(userId);
+                    rom.ListUserId = JsonConvert.SerializeObject(users);
+                    _dbContext.Update(rom);
+                    _dbContext.SaveChanges();
+                    return rom.Id;
+                }
+                else
+                {
+                    string check = users.FirstOrDefault(i=>i == userId);
+                    if(check == null)
+                    {
+                        users.Add(userId);
+                        rom.ListUserId = JsonConvert.SerializeObject(users);
+                        _dbContext.Update(rom);
+                        _dbContext.SaveChanges();
+                        return rom.Id;
+                    }
+                    else
+                    {
+                        return rom.Id;
+                    }
+                }   
+            }
+        }
+
+        public int GetRoomTopicIdByTopicId(int topicId)
+        {
+            RoomTopic rom = _dbContext.RoomTopic.FirstOrDefault(i => i.TopicId == topicId);
+            if(rom == null)
+            {
+                rom = new RoomTopic();
+                rom.TopicId = topicId;
+                rom.ListUserId = JsonConvert.SerializeObject(new List<string>());
+                rom.CreateDate = DateTime.Now;
+                _dbContext.Add(rom);
+                _dbContext.SaveChanges();
+                return rom.Id;
+            }
+            return rom.Id;
+        }   
 
     }
 }

@@ -55,6 +55,8 @@ builder.Services.AddTransient<EvaluateService>();
 builder.Services.AddTransient<MoneyService>();
 builder.Services.AddTransient<RoomService>();
 builder.Services.AddTransient<MessageService>();
+builder.Services.AddTransient<RoomTopicService>();
+builder.Services.AddTransient<MessageInRoomTopicService>();
 builder.Services.AddScoped<Helper>();
 
 
@@ -73,7 +75,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.Cookie.Path = "/";
     options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
     options.Cookie.HttpOnly = true;
-    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SameSite = SameSiteMode.Strict;
     options.LoginPath = "/Auth/Login";
     options.ExpireTimeSpan = TimeSpan.FromDays(7);
     options.SlidingExpiration = true;
@@ -83,7 +85,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(e=> e.MaximumReceiveMessageSize = 102400000) ;
 
 var app = builder.Build();
 
@@ -134,6 +136,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapHub<ChatHub>("/chatHub");
+app.MapHub<ChatTopicHub>("/chatTopicHub");
 
 
 

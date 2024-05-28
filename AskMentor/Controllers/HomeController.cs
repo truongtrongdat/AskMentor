@@ -163,5 +163,13 @@ namespace AskMentor.Controllers
             ViewBag.KeySearch = q;
             return View(models);
         }
+
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        [HttpGet("chatTopic/{id}")]
+        public IActionResult TopicChat(int id)
+        {
+            Topic topic = _dbContext.Topics.Find(id);
+            return View(topic);
+        }
     }
 }

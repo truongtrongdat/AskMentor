@@ -95,6 +95,9 @@
         </div>
     </div>
 </main>
+<div class="fixed-bottom ">
+    <a href="" id="chatTopic" class="float-end btn btn-success">Topic Chat</a>
+</div>
 
 @section Scripts {
 
@@ -102,6 +105,9 @@
     <script src="~/js/site.js"></script>
     <script>
         "use strict";
+
+        $('a#chatTopic').attr('href', '/chatTopic/' + window.location.href.split('/').pop());
+
         var RoomId = 0;
         var toId = "";
         var FromId = '@await _helper.GetUserId(User.Identity.Name)';

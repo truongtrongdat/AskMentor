@@ -1,0 +1,120 @@
+﻿@model Libs.Entity.Topic;
+@inject AskMentor.Helper.Helper _helper;
+
+@section Styles {
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/rent.css">
+
+    <style>
+        .mw-100 {
+            min-height: 30em;
+        }
+    </style>
+}
+
+<main class="container">
+
+    <h3 class="text-center text-success">@Model.Name</h3>
+    <div class="shadow-lg p-3 mb-5 rounded">
+        <ul class="list-group mw-100" id="chat-container">
+        </ul>
+
+        <div class="d-flex">
+            <input type="text" class="form-control" id="input_message" />
+            <button type="button" class="btn btn-outline-success" id="sendButton">Gửi</button>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+
+
+    <script>
+        "use strict";
+
+        var user = "@await _helper.GetUserId(User.Identity.Name)";
+        var topicId = parseInt(window.location.href.split('/').pop())
+
+        // SỬ LÝ THÊM TIN NHẮN
+        function appendMessage(userId, message) {
+
+            var li = document.createElement("li");
+            li.textContent = user + ": " + message;
+
+            li.classList.add("list-group-item")
+
+            if (user == userId) {
+                li.classList.add("d-flex", "justify-content-end", "active");
+            }
+            console.log(message)
+
+            document.getElementById("chat-container").appendChild(li);
+        }
+        // SỬ LÝ THÊM TIN NHẮN
+        function appendMessageList(message) {
+            message.forEach(item => {
+                var li = document.createElement("li");
+                li.textContent = item.userId + ": " + item.content;
+
+                li.classList.add("list-group-item")
+
+                if (user == item.userId) {
+                    li.classList.add("d-flex", "justify-content-end", "active");
+                }
+                console.log(item.message)
+
+                document.getElementById("chat-container").appendChild(li);
+            })
+        }
+
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chatTopicHub").build();
+
+        connection.on("ReceiveMessageTopic", function (userId, topicIdrs, message) {
+            if (topicId != topicIdrs) {
+                return;
+            }
+            appendMessage(userId, message)
+        });
+
+        connection.on("HistoryChatRecordTopic", function (topicId, message) {
+            appendMessageList(message)
+        });
+
+        document.getElementById("sendButton").addEventListener("click", function (event) {
+
+            var message = document.getElementById("input_message").value;
+            connection.invoke("SendMessageTopic", user, topicId, message)
+                .then(res => {
+                    $("#input_message").val("")
+                }).catch(function (err) {
+                return console.error(err.toString());
+            });
+            event.preventDefault();
+        });
+
+        document.getElementById("input_message").addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                document.getElementById("sendButton").click();
+            }
+        });
+
+        function startConnection() {
+            connection.start()
+                .then(function () {
+                    console.log("Connect thành công", user, topicId);
+                    connection.invoke("JoinRomTopic", user, topicId)
+                        .catch(function (err) {
+                            console.error("Error invoking JoinRomTopic:", err.toString());
+                        });
+
+                })
+                .catch(function (err) {
+                    console.error("Kết nối đã đóng không mong muốn:", err.toString());
+                    setTimeout(startConnection, 5000);
+                });
+        }
+
+        startConnection();
+
+    </script>
+}

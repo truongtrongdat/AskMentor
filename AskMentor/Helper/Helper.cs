@@ -59,6 +59,7 @@
             Field field = context.Fields.FirstOrDefault(i => i.Id == id);
             return field.Name;
         }
+       
 
         public async Task<string> UpLoadAvatar(IFormFile file)
         {
