@@ -57,7 +57,7 @@ namespace AskMentor.Hubs
                     });
                 }
 
-                await Clients.All.SendAsync("HistoryChatRecordTopic", TopicId, messageInRoomTopics);
+                await Clients.All.SendAsync("HistoryChatRecordTopic", TopicId, messageInRoomTopicsViewModel);
             }catch(Exception e)
             {
                 Console.WriteLine(e.Message);

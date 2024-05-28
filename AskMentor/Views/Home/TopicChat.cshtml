@@ -7,7 +7,9 @@
 
     <style>
         .mw-100 {
-            min-height: 30em;
+            min-height: 25em;
+            max-height: 40em;
+            overflow-y: auto;
         }
     </style>
 }
@@ -33,13 +35,14 @@
         "use strict";
 
         var user = "@await _helper.GetUserId(User.Identity.Name)";
+        var fullName = "@await _helper.GetNameUserByEmail(User.Identity.Name)"
         var topicId = parseInt(window.location.href.split('/').pop())
 
         // SỬ LÝ THÊM TIN NHẮN
         function appendMessage(userId, message) {
 
             var li = document.createElement("li");
-            li.textContent = user + ": " + message;
+            li.textContent = fullName + ": " + message;
 
             li.classList.add("list-group-item")
 
@@ -54,7 +57,7 @@
         function appendMessageList(message) {
             message.forEach(item => {
                 var li = document.createElement("li");
-                li.textContent = item.userId + ": " + item.content;
+                li.textContent = item.userEmail + ": " + item.content;
 
                 li.classList.add("list-group-item")
 
