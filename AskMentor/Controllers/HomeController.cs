@@ -29,13 +29,14 @@ namespace AskMentor.Controllers
             _hostingEnvironment = hostingEnvironment;
         }
 
-        public IActionResult Index()
+        public  IActionResult Index()
         {
             if (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
             {
                 ViewBag.IsAuthenticated = true;
             }
-            return View();
+            var category = helper.GetFields(0,5);
+            return View(category);
         }
 
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]

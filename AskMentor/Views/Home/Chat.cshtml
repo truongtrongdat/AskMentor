@@ -7,7 +7,7 @@
 }
 
 <main id="chatRoom" class="container">
-    <div class="header-room">
+    <div class="header-room" >
         <h2 class="header-row__header">
             Messages
         </h2>
@@ -20,7 +20,7 @@
                     {
                         @foreach (Libs.Entity.Room room in Model)
                         {
-                            <div class="discussion" onclick="ChoseUser('@room.UserId1','@room.UserId2')" style="width:20em">
+                            <div class="discussion "  onclick="ChoseUser('@room.UserId1','@room.UserId2')" style="width:20em">
                                 <div class="photo"
                                      style="background-image: url(https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80);">
                                 </div>
@@ -49,7 +49,7 @@
                     <i class="fa-regular fa-user ml-2em"></i>
                     <p class="name" id="nameChat"></p>
                 </div>
-                <div class="messages-chat" id="content_chat" style="overflow-y:scroll; max-height:30em">
+                <div class="messages-chat" id="content_chat" style="overflow-y:scroll; max-height:30em;height: 30em;">
                 </div>
                 <div class="footer-chat">
                     <i class="fa-regular fa-face-smile clickable " style="font-size:25pt;margin-left: 32px;" aria-hidden="true"></i>
@@ -70,6 +70,12 @@
                 $(".discussion").removeClass("message-active")
                 $(this).addClass("message-active")
             })
+            var firstDiscussion = document.querySelector('.discussion');
+            if (firstDiscussion) {
+                console.log(firstDiscussion);
+                //firstDiscussion.click();
+            }
+
         })
 
 

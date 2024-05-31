@@ -236,7 +236,7 @@
   
   .write-message {
     border:none !important;
-    width:70%;
+    width:60%;
     height: 50px;
     margin-left: 20px;
     padding: 10px;
@@ -266,3 +266,6 @@
   .ml-2em{
     margin-left: 2em;
   }
+.footer-chat .fa-solid.fa-paper-plane {
+    padding-left: 12px;
+}

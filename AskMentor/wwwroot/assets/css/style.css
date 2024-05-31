@@ -407,7 +407,6 @@ footer,
 }
 
 main {
-    height: 2000px;
     margin-top: 12em;
 }
 
@@ -885,4 +884,7 @@ footer {
 }
 #nav-main li a:hover{
     color: #108a00;
+}
+.list-category-container a {
+    text-decoration: none;
 }
