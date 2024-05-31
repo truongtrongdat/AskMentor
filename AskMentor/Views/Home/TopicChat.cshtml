@@ -31,8 +31,11 @@
 @section Scripts {
 
 
+
     <script>
         "use strict";
+
+        var Joinded = false;
 
         var user = "@await _helper.GetUserId(User.Identity.Name)";
         var fullName = "@await _helper.GetNameUserByEmail(User.Identity.Name)"
@@ -80,7 +83,11 @@
         });
 
         connection.on("HistoryChatRecordTopic", function (topicId, message) {
-            appendMessageList(message)
+            if (!Joinded) {
+
+                appendMessageList(message)
+                Joinded = true;
+            }
         });
 
         document.getElementById("sendButton").addEventListener("click", function (event) {
@@ -90,8 +97,8 @@
                 .then(res => {
                     $("#input_message").val("")
                 }).catch(function (err) {
-                return console.error(err.toString());
-            });
+                    return console.error(err.toString());
+                });
             event.preventDefault();
         });
 
