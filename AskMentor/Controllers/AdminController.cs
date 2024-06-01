@@ -1,4 +1,5 @@
 ﻿
+using Libs.Repositories;
 using Newtonsoft.Json;
 
 namespace AskMentor.Controllers
@@ -8,11 +9,12 @@ namespace AskMentor.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
-
-        public AdminController(UserManager<ApplicationUser> userManager, ApplicationDbContext dbContext)
+        private readonly EvaluateService _evaluateService;
+        public AdminController(UserManager<ApplicationUser> userManager, ApplicationDbContext dbContext, EvaluateService evaluateService)
         {
             _userManager = userManager;
             _dbContext = dbContext;
+            _evaluateService = evaluateService;
         }
 
         public IActionResult Index()
@@ -52,7 +54,7 @@ namespace AskMentor.Controllers
 
         public IActionResult Evaluate()
         {
-            return View(_dbContext.Evaluates.ToList());
+            return View(_evaluateService.getEvaluatesList());
         }
     }
 }
