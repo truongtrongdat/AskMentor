@@ -232,6 +232,7 @@ footer,
     display: flex;
     flex: 1;
     height: 100%;
+    justify-content: flex-end;
 }
 
 .nav-right {
