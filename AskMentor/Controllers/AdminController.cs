@@ -49,5 +49,10 @@ namespace AskMentor.Controllers
 
             return View(roomTopicViewModel);
         }
+
+        public IActionResult Evaluate()
+        {
+            return View(_dbContext.Evaluates.ToList());
+        }
     }
 }

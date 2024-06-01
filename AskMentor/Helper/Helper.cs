@@ -46,7 +46,7 @@
         public async Task<string> GetNameUserById(string id)
         {
             ApplicationUser user = await _userManager.FindByIdAsync(id);
-            return user.Name;
+            return user?.Name??"";
         }
 
         public string GetTopicNameById(int id)
