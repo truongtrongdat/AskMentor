@@ -19,6 +19,10 @@
         public List<Evaluate> getEvaluatesList()
         {
             return EvaluateRepository.getEvaluatesList();
+        }  
+        public List<Evaluate> getEvaluatesListByMentorID(string MentorId)
+        {
+            return EvaluateRepository.getEvaluatesListByMentorID(MentorId);
         }
         public Evaluate getEvaluateById(int id)
         {

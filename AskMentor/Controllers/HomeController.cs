@@ -1,4 +1,5 @@
 ﻿using Libs.Entity;
+using Libs.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,8 +17,9 @@ namespace AskMentor.Controllers
         private readonly RoomService roomService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly TopicService _topicService;
+        private readonly EvaluateService _evaluateService;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext context, Helper.Helper helper, RoomService roomService, IHttpContextAccessor httpContextAccessor, TopicService topicService, IWebHostEnvironment hostingEnvironment)
+        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext context, Helper.Helper helper, RoomService roomService, IHttpContextAccessor httpContextAccessor, TopicService topicService, EvaluateService evaluateService, IWebHostEnvironment hostingEnvironment)
         {
             _logger = logger;
             _userManager = userManager;
@@ -26,6 +28,7 @@ namespace AskMentor.Controllers
             this.roomService = roomService;
             _httpContextAccessor = httpContextAccessor;
             _topicService = topicService;
+            _evaluateService = evaluateService;
             _hostingEnvironment = hostingEnvironment;
         }
 
@@ -84,7 +87,13 @@ namespace AskMentor.Controllers
         public async Task<IActionResult> Profile(string id)
         {
             var model = await helper.GetUserById(id);
-            return View(model);
+            var listEvaluates = _evaluateService.getEvaluatesListByMentorID(id);
+            var response = new ViewProfile
+            {
+                ApplicationUsers = model,
+                Evaluates = listEvaluates
+            };
+            return View(response);
         }
 
         public async Task<IActionResult> EditProfile()

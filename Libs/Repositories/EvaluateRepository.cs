@@ -1,8 +1,11 @@
-﻿namespace Libs.Repositories
+﻿using Libs.Entity;
+
+namespace Libs.Repositories
 {
     public interface IEvaluateRepository : IRepository<Evaluate>
     {
         public List<Evaluate> getEvaluatesList();
+        public List<Evaluate> getEvaluatesListByMentorID(string MentorId);
         public Evaluate getEvaluateById(int id);
         Task<bool> RatingAsync(string userId, int rating, string mentorId, string content);
     }
@@ -14,6 +17,10 @@
         public List<Evaluate> getEvaluatesList()
         {
             return _dbContext.Evaluates.ToList();
+        }
+         public List<Evaluate> getEvaluatesListByMentorID(string MentorId)
+        {
+            return _dbContext.Evaluates.Where(evaluate => evaluate.MentorId == MentorId).Include(evaluate=> evaluate.User).ToList();
         }
 
         public Evaluate getEvaluateById(int id)

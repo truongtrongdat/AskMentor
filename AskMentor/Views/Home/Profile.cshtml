@@ -1,4 +1,4 @@
-﻿@model Libs.Entity.ApplicationUser
+﻿@model Libs.Entity.ViewProfile
 @inject AskMentor.Helper.Helper _helper;
 @{
     var userId = await _helper.GetUserId(User.Identity.Name);
@@ -70,41 +70,41 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="air3-presence-container">
-                            <img width="128" height="128" src="@(Model.Avt != "" ? Model.Avt : "/assets/img/avatar.jpeg")"
+                            <img width="128" height="128" src="@(Model.ApplicationUsers.Avt != "" ? Model.ApplicationUsers.Avt : "/assets/img/avatar.jpeg")"
                                  class="air3-avatar air3-avatar-128" alt="">
                         </div>
                     </div>
                     <div class="col-md-9">
                         <div class="fullname-mentor">
-                            <p class="name-main">FullName: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@Model.Name</span></p>
+                            <p class="name-main">FullName: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@Model.ApplicationUsers.Name</span></p>
                         </div>
                         <div class="work-email-address">
-                            <p class="name-main">Work email address: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@Model.Email</span></p>
+                            <p class="name-main">Work email address: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@Model.ApplicationUsers.Email</span></p>
                         </div>
                         <div class="address-mentor">
-                            <p class="name-main">Address: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@Model.Address</span></p>
+                            <p class="name-main">Address: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@Model.ApplicationUsers.Address</span></p>
                         </div>
                         <div class="university-mentor">
-                            <p class="name-main">University: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@Model.University</span></p>
+                            <p class="name-main">University: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@Model.ApplicationUsers.University</span></p>
                         </div>
                         <div class="major-mentor">
-                            <p class="name-main">Major: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@Model.Major</span></p>
+                            <p class="name-main">Major: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@Model.ApplicationUsers.Major</span></p>
                         </div>
                         <div class="field-mentor">
-                            <p class="name-main">Field: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@(Model.FileId != null ? _helper.GetFieldNameById(Model.FileId ?? 0) : "Java Developer") </span></p>
+                            <p class="name-main">Field: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@(Model.ApplicationUsers.FileId != null ? _helper.GetFieldNameById(Model.ApplicationUsers.FileId ?? 0) : "Java Developer") </span></p>
                         </div>
                         <div class="topic-mentor">
-                            <p class="name-main">Topic: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@(Model.TopicId != null ? _helper.GetTopicNameById(Model.TopicId ?? 0) : "")</span></p>
+                            <p class="name-main">Topic: <span style="font-style: italic; font-weight: 500; text-decoration:underline">@(Model.ApplicationUsers.TopicId != null ? _helper.GetTopicNameById(Model.ApplicationUsers.TopicId ?? 0) : "")</span></p>
                         </div>
                         <div class="cv-mentor">
-                            <p class="name-main">CV: <span style="font-style: italic; font-weight: 500; text-decoration:underline"><a target="_blank" href="@Url.Action("DownloadFile", "Home", new { id = Model.Id })"> @_helper.GetCertificationName(Model.Certification)</a></span></p>
+                            <p class="name-main">CV: <span style="font-style: italic; font-weight: 500; text-decoration:underline"><a target="_blank" href="@Url.Action("DownloadFile", "Home", new { id = Model.ApplicationUsers.Id })"> @_helper.GetCertificationName(Model.ApplicationUsers.Certification)</a></span></p>
                         </div>
                         @if (User.Identity.IsAuthenticated)
                         {
                             
 
                             <div class="chat-now-btn mt-3">
-                                <button class="chat-now" onclick="ChoseUser('@Model.Id')">
+                                <button class="chat-now" onclick="ChoseUser('@Model.ApplicationUsers.Id')">
                                     Chat Now
                                 </button>
                                 <button class="chat-now" data-toggle="modal" data-target="#evaluate-modal">
@@ -126,11 +126,73 @@
             </div>
         </div>
     </div>
+   
+
+        <section id="testimonials">
+            <!--heading--->
+            <div class="testimonial-heading">
+                <span>Comments</span>
+                <h4>Clients Says</h4>
+            </div>
+            <!--testimonials-box-container------>
+            <div class="testimonial-box-container">
+            @if (Model.Evaluates.Any())
+            {
+                @foreach(var items in Model.Evaluates)
+                {
+                    <!--BOX-1-------------->
+                    <div class="testimonial-box">
+                        <!--top------------------------->
+                        <div class="box-top">
+                            <!--profile----->
+                            <div class="profile">
+                                <!--img---->
+                                <div class="profile-img">
+                                    <img src="@items.User.Avt" />
+                                </div>
+                                <!--name-and-username-->
+                                <div class="name-user">
+                                    <strong>@items.User.Name</strong>
+                                    <span>@items.User.Email</span>
+                                </div>
+                            </div>
+                            <!--reviews------>
+                            <div class="reviews">
+                                @{
+                                    int rating = items.Rating;
+                                    for (int i = 0; i < 5; i++)
+                                    {
+                                        if (i < rating)
+                                        {
+                                            <i class="fas fa-star"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="far fa-star"></i>
+                                        }
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <!--Comments---------------------------------------->
+                        <div class="client-comment">
+                            <p>@items.Content</p>
+                        </div>
+                    </div>
+                }
+                
+            }
+           
+            
+               
+               
+            </div>
+        </section>
     <div class="modal" id="evaluate-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Đánh Giá Mentor @Model.Name</h5>
+                    <h5 class="modal-title">Đánh Giá Mentor @Model.ApplicationUsers.Name</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -225,7 +287,7 @@
 
         const radios = document.getElementsByName('rating');
         if (radios) {
-            var condition = "@await _helper.GetRatingOfMentor(userId, Model.Id)"
+            var condition = "@await _helper.GetRatingOfMentor(userId, Model.ApplicationUsers.Id)"
             radios.forEach(radio => {
                 if (radio.value === condition) {
                     radio.checked = true;
@@ -236,7 +298,7 @@
         function fnSaveEvalute() {
             const stars = document.querySelectorAll('.star-rating input');
             var userId = '@await _helper.GetUserId(User.Identity.Name)';
-            var mentorId = '@Model.Id';
+            var mentorId = '@Model.ApplicationUsers.Id';
             var content = $('#content-evaluate').val();
             stars.forEach(star => {
                 if (star.checked) {
